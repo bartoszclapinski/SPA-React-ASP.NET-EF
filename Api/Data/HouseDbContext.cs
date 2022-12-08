@@ -6,6 +6,10 @@ public class HouseDbContext : DbContext
 {
     public DbSet<HouseEntity> Houses => Set<HouseEntity>();
 
+    public HouseDbContext(DbContextOptions options) : base(options)
+    {
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
