@@ -5,9 +5,8 @@ import {useQuery} from "react-query";
 import axios, {AxiosError} from "axios";
 
 const useFetchHouses = () => {
-
     return useQuery<House[], AxiosError>("houses", () =>
-    axios.get(`${config.baseApiUrl}/houses`).then((response) => response.data));
+        axios.get(`${config.baseApiUrl}/houses`).then((response) => response.data));
 
     /*
     const [houses, setHouses] = useState<House[]>([]);
@@ -27,4 +26,11 @@ const useFetchHouses = () => {
      */
 }
 
+const useFetchHouse = (id: number) => {
+    return useQuery<House, AxiosError>(["houses", id], () =>
+        axios.get(`${config.baseApiUrl}/house/${id}`).then((response) => response.data)
+    );
+}
+
 export default useFetchHouses;
+export { useFetchHouse };
