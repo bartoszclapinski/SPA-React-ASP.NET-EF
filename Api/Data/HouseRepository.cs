@@ -17,4 +17,22 @@ public class HouseRepository : IHouseRepository
             .Select(h => new HouseDto(h.HouseId, h.Address, h.Country, h.Price))
             .ToListAsync();
     }
+
+    public async Task<HouseDetailDto?> Get(int id)
+    {
+        var houseToReturn = await _context.Houses.SingleOrDefaultAsync(h => h.HouseId == id);
+
+        if (houseToReturn == null)
+        {
+            return null;
+        }
+
+        return new HouseDetailDto(
+            houseToReturn.HouseId,
+            houseToReturn.Address,
+            houseToReturn.Country,
+            houseToReturn.Price,
+            houseToReturn.Description,
+            houseToReturn.Photo);
+    }
 }

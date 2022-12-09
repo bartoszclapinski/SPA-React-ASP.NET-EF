@@ -28,6 +28,18 @@ app.UseCors(p => p.WithOrigins("http://localhost:3000")
 
 app.UseHttpsRedirection();
 
-app.MapGet("/houses", (IHouseRepository repository) => repository.GetAll());
+app.MapGet("/houses", (IHouseRepository repository) => repository.GetAll())
+    .Produces<HouseDto>(StatusCodes.Status200OK);
+app.MapGet("/house/{houseId:int}", async (int houseId, IHouseRepository repository) =>
+{
+    var house = await repository.Get(houseId);
+
+    if (house == null)
+    {
+        return Results.Problem($"House with ID {houseId} not found.", statusCode: 404);
+    }
+
+    return Results.Ok(house);
+}).ProducesProblem(404).Produces<HouseDetailDto>(StatusCodes.Status200OK);
 
 app.Run();
