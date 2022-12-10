@@ -49,12 +49,12 @@ app.MapGet("/house/{houseId:int}", async (int houseId, IHouseRepository reposito
 
 app.MapPost("/houses", async ([FromBody] HouseDetailDto dto, IHouseRepository repository) =>
 {
-    var newHouse = repository.Add(dto);
+    var newHouse = await repository.Add(dto);
 
     return Results.Created($"/house/{newHouse.HouseId}", newHouse);
 }).Produces<HouseDetailDto>(StatusCodes.Status201Created);
 
-app.MapPut("/houses", async ([Frombody] HouseDetailDto dto, IHouseRepository repository) =>
+app.MapPut("/houses", async ([FromBody] HouseDetailDto dto, IHouseRepository repository) =>
 {
     if (await repository.Get(dto.HouseId) == null)
     {
