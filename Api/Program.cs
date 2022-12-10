@@ -1,4 +1,5 @@
 using Api.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,8 +29,12 @@ app.UseCors(p => p.WithOrigins("http://localhost:3000")
 
 app.UseHttpsRedirection();
 
+/*
+ *  Endpoints
+ */
 app.MapGet("/houses", (IHouseRepository repository) => repository.GetAll())
-    .Produces<HouseDto>(StatusCodes.Status200OK);
+    .Produces<HouseDto>(statusCode: 200);
+
 app.MapGet("/house/{houseId:int}", async (int houseId, IHouseRepository repository) =>
 {
     var house = await repository.Get(houseId);
@@ -40,6 +45,37 @@ app.MapGet("/house/{houseId:int}", async (int houseId, IHouseRepository reposito
     }
 
     return Results.Ok(house);
-}).ProducesProblem(404).Produces<HouseDetailDto>(StatusCodes.Status200OK);
+}).ProducesProblem(404).Produces<HouseDetailDto>(statusCode: 200);
+
+app.MapPost("/houses", async ([FromBody] HouseDetailDto dto, IHouseRepository repository) =>
+{
+    var newHouse = repository.Add(dto);
+
+    return Results.Created($"/house/{newHouse.HouseId}", newHouse);
+}).Produces<HouseDetailDto>(StatusCodes.Status201Created);
+
+app.MapPut("/houses", async ([Frombody] HouseDetailDto dto, IHouseRepository repository) =>
+{
+    if (await repository.Get(dto.HouseId) == null)
+    {
+        return Results.Problem($"House {dto.HouseId} not found.", statusCode: 404);
+    }
+
+    var updatedHouse = await repository.Update(dto);
+
+    return Results.Ok(updatedHouse);
+}).ProducesProblem(404).Produces<HouseDetailDto>(statusCode: 200);
+
+app.MapDelete("/houses/{houseId:int}", async (int houseId, IHouseRepository repository) =>
+{
+    if (await repository.Get(houseId) == null)
+    {
+        return Results.Problem($"House {houseId} not found.", statusCode: 404);
+    }
+
+    await repository.Delete(houseId);
+
+    return Results.Ok();
+}).ProducesProblem(404).Produces(statusCode: 200);
 
 app.Run();
