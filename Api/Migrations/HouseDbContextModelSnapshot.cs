@@ -16,6 +16,115 @@ namespace Api.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.11");
 
+            modelBuilder.Entity("Api.Data.BidEntity", b =>
+                {
+                    b.Property<int>("BidId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Bidder")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("HouseId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("BidId");
+
+                    b.HasIndex("HouseId");
+
+                    b.ToTable("Bids");
+
+                    b.HasData(
+                        new
+                        {
+                            BidId = 1,
+                            Amount = 200000,
+                            Bidder = "Sonia Reading",
+                            HouseId = 1
+                        },
+                        new
+                        {
+                            BidId = 2,
+                            Amount = 202400,
+                            Bidder = "Dick Johnson",
+                            HouseId = 1
+                        },
+                        new
+                        {
+                            BidId = 3,
+                            Amount = 302400,
+                            Bidder = "Mohammed Vahls",
+                            HouseId = 2
+                        },
+                        new
+                        {
+                            BidId = 4,
+                            Amount = 310500,
+                            Bidder = "Jane Williams",
+                            HouseId = 2
+                        },
+                        new
+                        {
+                            BidId = 5,
+                            Amount = 315400,
+                            Bidder = "John Kepler",
+                            HouseId = 2
+                        },
+                        new
+                        {
+                            BidId = 6,
+                            Amount = 201000,
+                            Bidder = "Bill Mentor",
+                            HouseId = 3
+                        },
+                        new
+                        {
+                            BidId = 7,
+                            Amount = 410000,
+                            Bidder = "Melissa Kirk",
+                            HouseId = 4
+                        },
+                        new
+                        {
+                            BidId = 8,
+                            Amount = 450000,
+                            Bidder = "Scott Max",
+                            HouseId = 4
+                        },
+                        new
+                        {
+                            BidId = 9,
+                            Amount = 470000,
+                            Bidder = "Christine James",
+                            HouseId = 4
+                        },
+                        new
+                        {
+                            BidId = 10,
+                            Amount = 450000,
+                            Bidder = "Omesh Carim",
+                            HouseId = 5
+                        },
+                        new
+                        {
+                            BidId = 11,
+                            Amount = 150000,
+                            Bidder = "Charlotte Max",
+                            HouseId = 5
+                        },
+                        new
+                        {
+                            BidId = 12,
+                            Amount = 170000,
+                            Bidder = "Marcus Scott",
+                            HouseId = 5
+                        });
+                });
+
             modelBuilder.Entity("Api.Data.HouseEntity", b =>
                 {
                     b.Property<int>("HouseId")
@@ -82,6 +191,17 @@ namespace Api.Migrations
                             Description = "This luxurious three bedroom flat is contemporary in style and benefits from the use of a gymnasium and a reserved underground parking space.",
                             Price = 400500
                         });
+                });
+
+            modelBuilder.Entity("Api.Data.BidEntity", b =>
+                {
+                    b.HasOne("Api.Data.HouseEntity", "House")
+                        .WithMany()
+                        .HasForeignKey("HouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("House");
                 });
 #pragma warning restore 612, 618
         }
