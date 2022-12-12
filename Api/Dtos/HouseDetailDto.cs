@@ -1,4 +1,11 @@
-﻿namespace Api.Data;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record HouseDetailDto(int HouseId, string? Address, string? Country, 
-    int Price, string? Description, string? Photo);
+namespace Api.Data;
+
+public record HouseDetailDto(
+    int HouseId, 
+    [property: Required] string? Address, 
+    [property: Required] string? Country, 
+    int Price, 
+    string? Description, 
+    string? Photo);
